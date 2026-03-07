@@ -1,8 +1,8 @@
-# Contributing to Daily Graph Contributor Bot 🤝
+# Contributing to Daily Graph Contributor Bot
 
 We love your input! We want to make contributing to this repository as easy and transparent as possible.
 
-## 📝 How to Contribute New Problems
+## How to Contribute New Problems
 
 If you want to add more solutions to the bot's daily rotation, you can directly update the script:
 
@@ -24,5 +24,5 @@ If you want to add more solutions to the bot's daily rotation, you can directly 
 6. **Push** your work back up to your fork
 7. Submit a **Pull request** so that we can review your changes!
 
-## 🐛 Found a Bug?
+## Found a Bug?
 If you find a bug in the code generator or one of the existing solutions, feel free to open an **Issue** on the repository outlining what the bug is and how to reproduce it, or just submit a pull request with the fix!

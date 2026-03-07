@@ -15,7 +15,7 @@ const PROBLEMS = [
 
 # Example
 print(two_sum([2, 7, 11, 15], 9))  # [0, 1]`,
-    insight: "Store each number's index in a hash map. For every element, check if its complement already exists — O(n) time."
+    insight: "Store each number's index in a hash map. For every element, check if its complement already exists  O(n) time."
   },
   {
     title: "Valid Parentheses",
@@ -33,7 +33,7 @@ print(two_sum([2, 7, 11, 15], 9))  # [0, 1]`,
     return len(stack) == 0
 
 print(is_valid("()[]{}"))  # True`,
-    insight: "Push open brackets, pop & verify on close. If stack is empty at end — valid."
+    insight: "Push open brackets, pop & verify on close. If stack is empty at end  valid."
   },
   {
     title: "Maximum Subarray",
@@ -64,7 +64,7 @@ print(max_subarray([-2,1,-3,4,-1,2,1,-5,4]))  # 6`,
     return -1
 
 print(search([-1,0,3,5,9,12], 9))  # 4`,
-    insight: "Halve the search space each iteration — O(log n) time."
+    insight: "Halve the search space each iteration  O(log n) time."
   },
   {
     title: "Reverse Linked List",
@@ -118,7 +118,7 @@ print(merge([[1,3],[2,6],[8,10],[15,18]]))`,
             if grid[r][c] == '1':
                 dfs(r, c); count += 1
     return count`,
-    insight: "DFS from each unvisited land cell, marking the whole island visited — count equals number of DFS calls."
+    insight: "DFS from each unvisited land cell, marking the whole island visited  count equals number of DFS calls."
   },
   {
     title: "Climbing Stairs",
@@ -129,10 +129,10 @@ print(merge([[1,3],[2,6],[8,10],[15,18]]))`,
         a, b = b, a + b
     return b
 
-# ways(n) = ways(n-1) + ways(n-2)  → Fibonacci!
+# ways(n) = ways(n-1) + ways(n-2)   Fibonacci!
 for i in range(1, 8):
     print(f"stairs={i}: {climb_stairs(i)} ways")`,
-    insight: "Each step you can come from n-1 or n-2 — identical to Fibonacci. O(n) time, O(1) space."
+    insight: "Each step you can come from n-1 or n-2  identical to Fibonacci. O(n) time, O(1) space."
   },
   {
     title: "Longest Common Prefix",
@@ -168,7 +168,7 @@ print(longest_common_prefix(["flower","flow","flight"]))  # "fl"`,
     return out
 
 print(product_except_self([1,2,3,4]))  # [24,12,8,6]`,
-    insight: "Two-pass prefix/suffix product — no division, O(n) time, O(1) extra space."
+    insight: "Two-pass prefix/suffix product  no division, O(n) time, O(1) extra space."
   },
   {
     title: "Fibonacci (Memoized)",
@@ -204,7 +204,7 @@ print([fib(i) for i in range(10)])
     return slow
 
 print(find_duplicate([1,3,4,2,2]))  # 2`,
-    insight: "Treat the array as a linked list — Floyd's tortoise and hare finds the cycle entrance = duplicate."
+    insight: "Treat the array as a linked list  Floyd's tortoise and hare finds the cycle entrance = duplicate."
   },
   {
     title: "Rotate Array",
@@ -225,7 +225,7 @@ print(find_duplicate([1,3,4,2,2]))  # 2`,
 nums = [1,2,3,4,5,6,7]
 rotate(nums, 3)
 print(nums)  # [5,6,7,1,2,3,4]`,
-    insight: "Reverse the whole array, then reverse each part — three O(n) reverses achieve O(1) space rotation."
+    insight: "Reverse the whole array, then reverse each part  three O(n) reverses achieve O(1) space rotation."
   },
   {
     title: "Detect Cycle in Linked List",
@@ -243,11 +243,11 @@ def has_cycle(head):
         if slow is fast:
             return True
     return False`,
-    insight: "Slow moves 1 step, fast moves 2. If they ever meet, there's a cycle — Floyd's algorithm."
+    insight: "Slow moves 1 step, fast moves 2. If they ever meet, there's a cycle  Floyd's algorithm."
   },
 ];
 
-const WORKFLOW = `name: 🤖 Daily Code Commit
+const WORKFLOW = `name:  Daily Code Commit
 
 on:
   schedule:
@@ -275,7 +275,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git diff --staged --quiet || git commit -m "🤖 Daily code — $(date +'%b %d, %Y')"
+          git diff --staged --quiet || git commit -m " Daily code  $(date +'%b %d, %Y')"
           git push`;
 
 function buildScript(problems) {
@@ -284,7 +284,7 @@ function buildScript(problems) {
     diff: p.diff, code: p.code, insight: p.insight
   })), null, 2);
 
-  return `"""Daily Code Generator — zero external dependencies, 100% free"""
+  return `"""Daily Code Generator  zero external dependencies, 100% free"""
 import datetime, os, json
 
 PROBLEMS = ${data}
@@ -308,14 +308,44 @@ def save(p):
         f.write(f"## Solution\\n\\n\`\`\`{p['lang']}\\n{p['code']}\\n\`\`\`\\n\\n")
         f.write(f"## Key Insight\\n{p['insight']}\\n")
 
-    print(f"✅ Saved: {fname}")
+    print(f"Saved: {fname}")
     return fname
+
+def update_readme():
+    readme_path = "README.md"
+    if not os.path.exists(readme_path): return
+    with open(readme_path, "r") as f:
+        content = f.read()
+    
+    solved_count = 0
+    if os.path.exists("solutions"):
+        for root, dirs, files in os.walk("solutions"):
+            for file in files:
+                if file.endswith(".md"):
+                    solved_count += 1
+    
+    import re
+    stats_block = f"""
+<!-- STATS:START -->
+## Progress Stats
+- Current Streak: Active
+- Total Problems Solved: {solved_count}
+<!-- STATS:END -->
+"""
+    if "<!-- STATS:START -->" in content:
+        content = re.sub(r"<!-- STATS:START -->.*?<!-- STATS:END -->", stats_block.strip() + "\n", content, flags=re.DOTALL)
+    else:
+        content += "\n" + stats_block.strip() + "\n"
+        
+    with open(readme_path, "w") as f:
+        f.write(content)
 
 if __name__ == "__main__":
     p = get_today_problem()
-    print(f"📌 Today: {p['title']} ({p['diff']})")
+    print(f"Today: {p['title']} ({p['diff']})")
     save(p)
-    print("🎉 Done! Commit incoming...")
+    update_readme()
+    print("Done! Commit incoming...")
 `;
 }
 
@@ -368,8 +398,7 @@ export default function App() {
       <div style={{borderBottom:"1px solid #181818",padding:"18px 28px",
         display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div style={{display:"flex",alignItems:"center",gap:14}}>
-          <div style={{width:34,height:34,background:"#2ecc71",
-            display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>🟩</div>
+          <div style={{width:34,height:34,background:"#2ecc71", display:"flex",alignItems:"center",justifyContent:"center",fontSize:16, fontWeight:"bold", color:"#000"}}>#</div>
           <div>
             <div style={{fontFamily:"'Syne',sans-serif",fontSize:17,fontWeight:800,color:"#fff",letterSpacing:"-.01em"}}>
               FREE GIT GRAPH BOT
@@ -389,7 +418,7 @@ export default function App() {
 
       {/* TABS */}
       <div style={{borderBottom:"1px solid #161616",display:"flex",paddingLeft:12}}>
-        {[["preview","📌 Today's Problem"],["workflow","🔄 workflow.yml"],["script","🐍 generate.py"],["setup","📋 Setup"]].map(([id,label])=>(
+        {[["preview"," Today's Problem"],["workflow"," workflow.yml"],["script"," generate.py"],["setup"," Setup"]].map(([id,label])=>(
           <button key={id} className={`tab ${tab===id?"on":""}`} onClick={()=>setTab(id)}>{label}</button>
         ))}
       </div>
@@ -421,7 +450,7 @@ export default function App() {
                 </div>
                 <span style={{fontSize:10,color:"#333"}}>solution.py</span>
                 <button className="cp" onClick={()=>copy(todayP.code,"code")}>
-                  {copied==="code"?"✓ copied":"copy"}
+                  {copied==="code"?" copied":"copy"}
                 </button>
               </div>
               <pre style={{padding:"18px 22px",fontSize:12.5,lineHeight:1.75,overflowX:"auto",color:"#aaa"}}
@@ -430,7 +459,7 @@ export default function App() {
 
             <div style={{background:"#0d1f14",border:"1px solid #1a3d24",padding:"14px 18px",
               display:"flex",gap:12,alignItems:"flex-start"}}>
-              <span style={{color:"#2ecc71",fontSize:16,flexShrink:0}}>💡</span>
+              <span style={{color:"#2ecc71",fontSize:16,flexShrink:0}}></span>
               <div>
                 <div style={{fontSize:10,color:"#2ecc71",letterSpacing:".12em",textTransform:"uppercase",
                   fontWeight:700,marginBottom:4}}>Key Insight</div>
@@ -462,9 +491,9 @@ export default function App() {
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div>
                 <div style={{fontSize:12,color:"#fff",fontWeight:600}}>.github/workflows/daily_commit.yml</div>
-                <div style={{fontSize:10,color:"#444",marginTop:3}}>Free — GitHub Actions is free for public repos</div>
+                <div style={{fontSize:10,color:"#444",marginTop:3}}>Free  GitHub Actions is free for public repos</div>
               </div>
-              <button className="cp" onClick={()=>copy(WORKFLOW,"wf")}>{copied==="wf"?"✓ copied":"copy"}</button>
+              <button className="cp" onClick={()=>copy(WORKFLOW,"wf")}>{copied==="wf"?" copied":"copy"}</button>
             </div>
             <div style={{background:"#090909",border:"1px solid #1a1a1a"}}>
               <pre style={{padding:"18px 22px",fontSize:12,lineHeight:1.8,overflowX:"auto",color:"#999"}}
@@ -479,9 +508,9 @@ export default function App() {
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div>
                 <div style={{fontSize:12,color:"#fff",fontWeight:600}}>generate_code.py</div>
-                <div style={{fontSize:10,color:"#444",marginTop:3}}>Pure Python stdlib — zero dependencies, zero cost</div>
+                <div style={{fontSize:10,color:"#444",marginTop:3}}>Pure Python stdlib  zero dependencies, zero cost</div>
               </div>
-              <button className="cp" onClick={()=>copy(script,"py")}>{copied==="py"?"✓ copied":"copy"}</button>
+              <button className="cp" onClick={()=>copy(script,"py")}>{copied==="py"?" copied":"copy"}</button>
             </div>
             <div style={{background:"#090909",border:"1px solid #1a1a1a"}}>
               <pre style={{padding:"18px 22px",fontSize:11.5,lineHeight:1.75,overflowX:"auto",color:"#999",maxHeight:480}}
@@ -494,13 +523,13 @@ export default function App() {
         {tab==="setup" && (
           <div style={{display:"flex",flexDirection:"column",gap:14}}>
             <div style={{fontSize:12,color:"#2ecc71",letterSpacing:".1em",textTransform:"uppercase",fontWeight:700}}>
-              Setup — totally free, 4 steps
+              Setup  totally free, 4 steps
             </div>
             {[
               ["Create a public GitHub repo",`git init daily-code && cd daily-code\ngit remote add origin https://github.com/YOUR_USER/daily-code`],
               ["Add the two files",`# Copy from the tabs above into repo root:\ngenerate_code.py\n.github/workflows/daily_commit.yml`],
-              ["Push to GitHub",`git add .\ngit commit -m "🚀 init"\ngit push -u origin main`],
-              ["Enable Actions & test",`# Go to: repo → Actions tab → enable workflows\n# Then: Actions → Daily Code Commit → Run workflow\n# Check solutions/ folder for today's file ✅`],
+              ["Push to GitHub",`git add .\ngit commit -m " init"\ngit push -u origin main`],
+              ["Enable Actions & test",`# Go to: repo  Actions tab  enable workflows\n# Then: Actions  Daily Code Commit  Run workflow\n# Check solutions/ folder for today's file `],
             ].map(([title,code],i)=>(
               <div key={i} style={{display:"flex",gap:14,alignItems:"flex-start"}}>
                 <div style={{width:26,height:26,background:"#2ecc71",color:"#000",display:"flex",
@@ -511,7 +540,7 @@ export default function App() {
                   <div style={{fontSize:12,color:"#fff",fontWeight:600,marginBottom:6}}>{title}</div>
                   <div style={{background:"#090909",border:"1px solid #181818",padding:"10px 14px",position:"relative"}}>
                     <button className="cp" style={{position:"absolute",top:8,right:8}}
-                      onClick={()=>copy(code,`step${i}`)}>{copied===`step${i}`?"✓":"copy"}</button>
+                      onClick={()=>copy(code,`step${i}`)}>{copied===`step${i}`?"":"copy"}</button>
                     <pre style={{fontSize:11,lineHeight:1.7,color:"#777",paddingRight:52}}
                       dangerouslySetInnerHTML={{__html:highlight(code)}}/>
                   </div>
@@ -519,12 +548,12 @@ export default function App() {
               </div>
             ))}
             <div style={{background:"#0d1020",border:"1px solid #1a2040",padding:"14px 18px",marginTop:4}}>
-              <div style={{fontSize:11,color:"#82aaff",fontWeight:700,marginBottom:4}}>💰 Cost breakdown</div>
+              <div style={{fontSize:11,color:"#82aaff",fontWeight:700,marginBottom:4}}> Cost breakdown</div>
               <div style={{fontSize:11,color:"#334",lineHeight:1.8}}>
                 GitHub Actions (public repo): <span style={{color:"#2ecc71"}}>FREE</span><br/>
                 API keys needed: <span style={{color:"#2ecc71"}}>NONE</span><br/>
                 External services: <span style={{color:"#2ecc71"}}>NONE</span><br/>
-                Daily commits forever: <span style={{color:"#2ecc71"}}>✅ FREE</span>
+                Daily commits forever: <span style={{color:"#2ecc71"}}> FREE</span>
               </div>
             </div>
           </div>
@@ -534,7 +563,7 @@ export default function App() {
       <div style={{borderTop:"1px solid #131313",padding:"10px 28px",display:"flex",
         justifyContent:"space-between",fontSize:9,color:"#222",letterSpacing:".1em"}}>
         <span>FREE GIT GRAPH BOT · ZERO COST</span>
-        <span style={{color:"#1a3d24"}}>🟩🟩🟩🟩🟩🟩🟩 DAILY COMMITS</span>
+        <span style={{color:"#1a3d24"}}> DAILY COMMITS</span>
       </div>
     </div>
   );

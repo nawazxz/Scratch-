@@ -1,5 +1,5 @@
 """Daily Code Generator — zero external dependencies, 100% free"""
-import datetime, os, json
+import datetime, os, json, re
 
 PROBLEMS = [
   {
@@ -135,11 +135,40 @@ def save(p):
         f.write(f"## Solution\n\n```{p['lang']}\n{p['code']}\n```\n\n")
         f.write(f"## Key Insight\n{p['insight']}\n")
 
-    print(f"✅ Saved: {fname}")
+    print(f"Saved: {fname}")
     return fname
+
+def update_readme():
+    readme_path = "README.md"
+    if not os.path.exists(readme_path): return
+    with open(readme_path, "r") as f:
+        content = f.read()
+    
+    solved_count = 0
+    if os.path.exists("solutions"):
+        for root, dirs, files in os.walk("solutions"):
+            for file in files:
+                if file.endswith(".md"):
+                    solved_count += 1
+    
+    stats_block = f"""
+<!-- STATS:START -->
+## Progress Stats
+- Current Streak: Active
+- Total Problems Solved: {solved_count}
+<!-- STATS:END -->
+"""
+    if "<!-- STATS:START -->" in content:
+        content = re.sub(r"<!-- STATS:START -->.*?<!-- STATS:END -->", stats_block.strip() + "\\n", content, flags=re.DOTALL)
+    else:
+        content += "\\n" + stats_block.strip() + "\\n"
+        
+    with open(readme_path, "w") as f:
+        f.write(content)
 
 if __name__ == "__main__":
     p = get_today_problem()
-    print(f"📌 Today: {p['title']} ({p['diff']})")
+    print(f"Today: {p['title']} ({p['diff']})")
     save(p)
-    print("🎉 Done! Commit incoming...")
+    update_readme()
+    print("Done! Commit incoming...")
