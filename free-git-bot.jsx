@@ -272,8 +272,8 @@ jobs:
       - run: python generate_code.py
 
       - run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "\${{ github.actor }}"
+          git config user.email "\${{ github.actor_id }}+\${{ github.actor }}@users.noreply.github.com"
           git add .
           git diff --staged --quiet || git commit -m " Daily code  $(date +'%b %d, %Y')"
           git push`;
